@@ -1,25 +1,49 @@
-import logo from './logo.svg';
-import './App.css';
+import { useEffect, useState } from "react";
+import React from "react";
+import data from "./data";
+import CartItem from "./CartItem";
 
-function App() {
+const App = () => {
+  const [cart, setCart] = useState(data);
+  const increase = (id, value) => {
+    setCart(
+      cart.map((item) => (item.id == id ? { ...item, amount: value } : item))
+    );
+  };
+  const decrease = (id, value) => {
+    setCart(
+      cart.map((item) => (item.id == id ? { ...item, amount: value } : item))
+    );
+  };
+  const remove = (id) => {
+    setCart(
+      cart.map((item) => (item.id == id ? { ...item, amount: 0 } : item))
+    );
+  };
+  const clear=()=>{
+    setCart([])
+  }
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
+    <div className="container">
+      <h1>Your Bag</h1>
+      {cart.map((item, index) => {
+        return (
+          <CartItem remove={remove} decrease={decrease} increase={increase} key={index} item={item} id={index} />
+        );
+      })}
+      <div className="line"></div>
+      <div className="totalsec">
+        <p>Total</p>
+        <p className="total">
+          {cart
+            .reduce((acc, item) => acc + item.amount * item.price, 0)
+            .toFixed(2)}
+          $
         </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      </div>
+      <button onClick={clear} className="clear">CLEAR CART</button>
     </div>
   );
-}
+};
 
 export default App;
